@@ -47,23 +47,20 @@ public class OrderDAO_24110153 {
         }
     }
 
-    // Hàm 2: Lấy danh sách đơn hàng theo trạng thái (Dùng cho OrderHistoryServlet)
     public List<Order> findByUsernameAndStatus(String username, String status) {
         EntityManager em = JpaUtils_24110153.getEntityManager();
         try {
-            // Viết câu lệnh JPQL lọc theo Username của bảng User
-            String jpql = "SELECT o FROM Order o WHERE o.user.username = :username";
+            // Thêm JOIN FETCH o.orderDetails để nạp sẵn chi tiết đơn hàng, tránh lỗi LazyInitializationException
+            String jpql = "SELECT DISTINCT o FROM Order o JOIN FETCH o.orderDetails WHERE o.user.username = :username";
             
-            // Nếu có chọn trạng thái (khác ALL) thì nối thêm điều kiện WHERE
             if (status != null && !status.isEmpty() && !status.equals("ALL")) {
                 jpql += " AND o.status = :status";
             }
-            jpql += " ORDER BY o.orderDate DESC"; // Sắp xếp cho đơn hàng mới nhất lên trên cùng
+            jpql += " ORDER BY o.orderDate DESC"; 
 
             TypedQuery<Order> query = em.createQuery(jpql, Order.class);
             query.setParameter("username", username);
             
-            // Truyền tham số trạng thái vào câu query
             if (status != null && !status.isEmpty() && !status.equals("ALL")) {
                 query.setParameter("status", status);
             }
@@ -73,4 +70,48 @@ public class OrderDAO_24110153 {
             em.close();
         }
     }
-}
+ // Hàm cập nhật trạng thái đơn hàng
+    public boolean updateOrderStatus(int orderId, String newStatus) {
+        EntityManager em = JpaUtils_24110153.getEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        try {
+            trans.begin();
+            Order order = em.find(Order.class, orderId);
+            if (order != null) {
+                order.setStatus(newStatus);
+                em.merge(order);
+                trans.commit();
+                return true;
+            }
+            trans.rollback();
+            return false;
+        } catch (Exception e) {
+            if (trans.isActive()) trans.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            em.close();
+        }
+    }
+ // Hàm riêng biệt cho Admin lấy toàn bộ đơn hàng (có lọc trạng thái hoặc lấy tất cả)
+    public List<Order> findOrdersForAdmin(String status) {
+        EntityManager em = JpaUtils_24110153.getEntityManager();
+        try {
+            // Không có điều kiện theo username, lấy toàn bộ đơn hàng của tất cả user
+            String jpql = "SELECT DISTINCT o FROM Order o JOIN FETCH o.orderDetails";
+            
+            if (status != null && !status.isEmpty() && !status.equals("ALL")) {
+                jpql += " WHERE o.status = :status";
+            }
+            jpql += " ORDER BY o.orderDate DESC";
+
+            TypedQuery<Order> query = em.createQuery(jpql, Order.class);
+            if (status != null && !status.isEmpty() && !status.equals("ALL")) {
+                query.setParameter("status", status);
+            }
+            
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }}

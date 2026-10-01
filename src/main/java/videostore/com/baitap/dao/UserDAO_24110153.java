@@ -1,6 +1,10 @@
 package videostore.com.baitap.dao;
 
+import java.util.List;
+
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 import videostore.com.baitap.entity.User;
 import videostore.com.baitap.utils.JpaUtils_24110153;
 
@@ -30,4 +34,56 @@ public class UserDAO_24110153 {
             em.close();
         }
     }
-}
+   
+        // Lấy tất cả danh sách người dùng
+        public List<User> findAll() {
+            EntityManager em = JpaUtils_24110153.getEntityManager();
+            try {
+                TypedQuery<User> query = em.createQuery("SELECT u FROM User u", User.class);
+                return query.getResultList();
+            } finally {
+                em.close();
+            }
+        }
+
+        // Cập nhật thông tin User (hoặc phân quyền Admin)
+        public boolean update(User user) {
+            EntityManager em = JpaUtils_24110153.getEntityManager();
+            EntityTransaction trans = em.getTransaction();
+            try {
+                trans.begin();
+                em.merge(user);
+                trans.commit();
+                return true;
+            } catch (Exception e) {
+                if (trans.isActive()) trans.rollback();
+                e.printStackTrace();
+                return false;
+            } finally {
+                em.close();
+            }
+        }
+
+        // Xóa user
+        public boolean delete(String username) {
+            EntityManager em = JpaUtils_24110153.getEntityManager();
+            EntityTransaction trans = em.getTransaction();
+            try {
+                trans.begin();
+                User user = em.find(User.class, username);
+                if (user != null) {
+                    em.remove(user);
+                    trans.commit();
+                    return true;
+                }
+                trans.rollback();
+                return false;
+            } catch (Exception e) {
+                if (trans.isActive()) trans.rollback();
+                e.printStackTrace();
+                return false;
+            } finally {
+                em.close();
+            }
+        }
+    }
