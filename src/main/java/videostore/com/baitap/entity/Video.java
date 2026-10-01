@@ -27,6 +27,9 @@ public class Video {
 
     @Column(name = "Active")
     private Boolean active = true;
+    
+    @Column(name = "Quantity")
+    private Integer quantity; // Số lượng tồn kho thực tế
 
     @ManyToOne
     @JoinColumn(name = "CategoryId")
@@ -60,10 +63,14 @@ public class Video {
 
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }
-
-    public List<Favorite> getFavorites() { return favorites; }
+    
+    public Integer getQuantity() { return quantity; }
+	public void setQuantity(Integer quantity) { this.quantity = quantity; }
+	
+	public List<Favorite> getFavorites() { return favorites; }
     public void setFavorites(List<Favorite> favorites) { this.favorites = favorites; }
 
     public List<Share> getShares() { return shares; }
     public void setShares(List<Share> shares) { this.shares = shares; }
+   
 }

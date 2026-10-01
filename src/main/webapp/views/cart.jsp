@@ -6,7 +6,12 @@
 <meta charset="UTF-8">
 <title>Giỏ hàng của bạn</title>
 <style>
-.cart-container { font-family: Arial, sans-serif; padding: 20px; max-width: 1100px; margin: auto; }
+.cart-container {
+	font-family: Arial, sans-serif;
+	padding: 20px;
+	max-width: 1100px;
+	margin: auto;
+}
 
 table {
 	width: 100%;
@@ -50,7 +55,7 @@ th {
 </style>
 </head>
 <body>
-    <!-- ĐÃ THÊM THẺ DIV NÀY ĐỂ BỌC NỘI DUNG LẠI -->
+	<!-- ĐÃ THÊM THẺ DIV NÀY ĐỂ BỌC NỘI DUNG LẠI -->
 	<div class="cart-container">
 
 		<h2>Giỏ hàng của bạn</h2>
@@ -80,10 +85,9 @@ th {
 							<!-- Form cập nhật số lượng -->
 							<form action="${pageContext.request.contextPath}/cart"
 								method="post" style="display: inline;">
-								<input type="hidden" name="action" value="update"> <input
-									type="hidden" name="videoId" value="${entry.key}"> <input
-									type="number" name="quantity" value="${entry.value.quantity}"
-									min="1" max="5" style="width: 50px;">
+								<input type="number" name="quantity"
+									value="${entry.value.quantity}" min="1"
+									max="${entry.value.stock}" style="width: 50px;">
 								<button type="submit" class="btn btn-update">Cập nhật</button>
 							</form>
 						</td>
@@ -113,6 +117,7 @@ th {
 			</form>
 		</c:if>
 
-	</div> <!-- ĐÓNG THẺ DIV Ở ĐÂY -->
+	</div>
+	<!-- ĐÓNG THẺ DIV Ở ĐÂY -->
 </body>
 </html>

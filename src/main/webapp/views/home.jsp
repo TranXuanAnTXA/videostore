@@ -93,6 +93,11 @@
 							<b>Likes:</b>
 							${favoriteCounts[v.videoId]==null?0:favoriteCounts[v.videoId]}
 						</p>
+						
+						<!-- THÊM HIỂN THỊ SỐ LƯỢNG Ở ĐÂY -->
+						<p>
+							<b>Kho còn:</b> <span style="color: red; font-weight: bold;">${v.quantity}</span> bản
+						</p>
 
 						<a
 							href="${pageContext.request.contextPath}/video/detail?id=${v.videoId}"
