@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemesh>
+    <!-- Trỏ chính xác về thư mục chứa layout của bạn (bỏ chữ /views/) -->
+    <decorator-prefix>/decorators/</decorator-prefix>
+
+    <!-- Áp dụng 1 bộ khung layout.jsp duy nhất cho toàn bộ dự án -->
+    <mapping path="/*" decorator="layout.jsp"/>
+</sitemesh>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+    <persistence-unit name="VideoStorePU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        
+        <!-- KHAI BÁO 5 ENTITY TẠI ĐÂY ĐỂ TOMCAT VÀ JPA NHẬN DIỆN -->
+        <class>videostore.com.baitap.entity.User</class>
+        <class>videostore.com.baitap.entity.Category</class>
+        <class>videostore.com.baitap.entity.Video</class>
+        <class>videostore.com.baitap.entity.Favorite</class>
+        <class>videostore.com.baitap.entity.Share</class>
+
+        <properties>
+            <!-- 1. Cấu hình kết nối SQL Server -->
+            <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=videostore_db;encrypt=true;trustServerCertificate=true;"/>
+            <property name="jakarta.persistence.jdbc.user" value="sa"/>
+            <property name="jakarta.persistence.jdbc.password" value="123456"/> <!-- Nhớ đổi lại mật khẩu SQL Server của bạn -->
+
+            <!-- 2. Cấu hình tự động tạo/cập nhật bảng -->
+            <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
+
+            <!-- 3. Cấu hình Debug -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            
+            <!-- 4. Ngôn ngữ SQL Server -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
+        </properties>
+    </persistence-unit>
+</persistence>
